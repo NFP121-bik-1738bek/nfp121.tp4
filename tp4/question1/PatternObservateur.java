@@ -30,7 +30,15 @@ public class PatternObservateur extends junit.framework.TestCase {
         // vérifier que les deux observateurs ont bien été notifiés avec les
         // bons paramètres
 
-        // à compléter !!
+        assertFalse(o1.senders().empty());
+        assertFalse(o2.senders().empty());
+        String[] test = {" 1 ", "test"};
+        for(String s: test) {      
+            assertEquals(l1, o1.senders().pop());
+            assertEquals(l1, o2.senders().pop());
+            assertEquals(s, o1.arguments().pop());
+            assertEquals(s, o2.arguments().pop());
+        }
 
         // ne pas modifier ces lignes, dernières assertions vraies de cette
         // méthode
@@ -54,7 +62,18 @@ public class PatternObservateur extends junit.framework.TestCase {
         // à compléter à partir de la ligne 56
         // vérifier que l'observateur a bien été notifié par les deux listes
 
-        // à compléter !!
+        String[] testB = {" B ", "testB"};
+        for(String s: testB) {
+            assertEquals(l2, o.senders().pop());
+            assertEquals(s, o.arguments().pop());
+        }
+        
+        String[] testA = {" A ", "testA"};
+        for(String s: testA) {
+            assertEquals(l1, o.senders().pop());
+            assertEquals(s, o.arguments().pop());
+        }
+
 
         // ne pas modifier cette ligne, dernière assertion vraie de cette
         // méthode
@@ -76,7 +95,14 @@ public class PatternObservateur extends junit.framework.TestCase {
         // vérifier le bon fonctionnement de countObservers(), de deleteObserver
         // et deleteObservers()
 
-        // à compléter !!
+        assertTrue(l1.countObservers() == 2 && l2.countObservers() == 2);
+        l1.deleteObserver(o1);
+        l2.deleteObserver(o1);
+        assertTrue(l1.countObservers() == 1 && l2.countObservers() == 1);
+        
+        l1.deleteObservers();
+        l2.deleteObservers();
+        assertTrue(l1.countObservers() == 0 && l2.countObservers() == 0);
 
         // ne pas modifier ces lignes, dernières assertions vraies de cette
         // méthode

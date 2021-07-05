@@ -34,31 +34,70 @@ public class Controleur extends JPanel {
 
         setLayout(new GridLayout(2, 1));
         add(donnee);
-        donnee.addActionListener(null /* null est à remplacer */);
+        donnee.addActionListener(null);
+        
         JPanel boutons = new JPanel();
         boutons.setLayout(new FlowLayout());
-        boutons.add(push);  push.addActionListener(null /* null est à remplacer */);
-        boutons.add(add);   add.addActionListener(null /* null est à remplacer */);
-        boutons.add(sub);   sub.addActionListener(null /* null est à remplacer */);
-        boutons.add(mul);   mul.addActionListener(null /* null est à remplacer */);
-        boutons.add(div);   div.addActionListener(null /* null est à remplacer */);
-        boutons.add(clear); clear.addActionListener(null /* null est à remplacer */);
+        
+        boutons.add(push);  push.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actEvt) {
+                try {
+                    pile.empiler(operande());
+                    actualiserInterface();
+                } catch (Exception exep) { }
+            }
+        });
+        
+        boutons.add(add);   add.addActionListener(new Operateur());
+        boutons.add(sub);   sub.addActionListener(new Operateur());
+        boutons.add(mul);   mul.addActionListener(new Operateur());
+        boutons.add(div);   div.addActionListener(new Operateur());
+    
+        boutons.add(clear); clear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent action){
+                try {
+                    while(!pile.estVide()){
+                        pile.depiler();
+                    }
+                    actualiserInterface();
+                    } catch(Exception ex){
+                }
+            }
+        });
         add(boutons);
         boutons.setBackground(Color.red);
         actualiserInterface();
     }
 
     public void actualiserInterface() {
-        // à compléter
+        donnee.setText("");
     }
 
     private Integer operande() throws NumberFormatException {
         return Integer.parseInt(donnee.getText());
     }
 
-    // à compléter
-    // en cas d'exception comme division par zéro, 
-    // mauvais format de nombre suite à l'appel de la méthode operande
-    // la pile reste en l'état (intacte)
-
+    private class Operateur implements ActionListener {
+        public void actionPerformed(ActionEvent ae){
+            String operateur = ((JButton) ae.getSource()).getActionCommand();
+            
+            if (pile.taille() <= 1) {
+                return;
+            }
+            
+            try {
+                int n1 = pile.depiler();
+                int n2 = pile.depiler();
+            
+                switch(operateur) {
+                    case "+" : pile.empiler(n1 + n2); break;
+                    case "-" : pile.empiler(n2 - n1); break;
+                    case "*" : pile.empiler(n1 * n2); break;
+                    case "/" : if (n1 != 0) { pile.empiler(n2 / n1); } break;
+                } 
+                
+                actualiserInterface();
+            } catch (Exception ex1) {}
+        }
+    } 
 }
